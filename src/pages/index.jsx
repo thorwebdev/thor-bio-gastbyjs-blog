@@ -83,7 +83,7 @@ const Index = props => {
                 key={post.id}
                 title={post.frontmatter.title}
                 link={post.frontmatter.path}
-                bg="linear-gradient(to right, #D4145A 0%, #FBB03B 100%)"
+                bg={post.frontmatter.background}
               >
                 {post.frontmatter.description}
               </ProjectCard>
@@ -147,6 +147,7 @@ export const pageQuery = graphql`
             title
             description
             date(formatString: "MMMM DD, YYYY")
+            background
           }
         }
       }

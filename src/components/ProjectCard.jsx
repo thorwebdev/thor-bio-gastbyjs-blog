@@ -27,8 +27,8 @@ const Title = styled.div`
 const ProjectCard = ({ title, link, children, bg }) => (
   <Link to={link}>
     <Wrapper rel="noopener noreferrer" bg={bg}>
-      <Text>{children}</Text>
       <Title>{title}</Title>
+      <Text>{children}</Text>
     </Wrapper>
   </Link>
 );
