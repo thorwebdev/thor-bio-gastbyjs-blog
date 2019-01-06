@@ -10,6 +10,9 @@ import ProjectCard from "../../components/ProjectCard";
 // Elements
 import Inner from "../../elements/Inner";
 import { Title } from "../../elements/Titles";
+import Footer from "../../elements/Footer";
+
+import github from "../../images/github-icon.svg";
 
 const ProjectsWrapper = styled.div`
   ${tw`flex flex-wrap justify-between mt-8`};
@@ -62,6 +65,27 @@ const Index = props => {
             </ProjectsWrapper>
           </Inner>
         </Content>
+        <Footer>
+          &copy; 2018 by Gatsby Starter Portfolio Cara | Made by{" "}
+          <a
+            href="https://www.lekoarts.de"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LekoArts
+          </a>
+          , extended to <Link to="/blog">blog</Link> by{" "}
+          <a href="http://thor.news">Thor</a> |{" "}
+          <a
+            href="https://github.com/tschaeff/thor-news-gastbyjs-blog"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="icon">
+              <img src={github} alt="Github" />
+            </span>
+          </a>
+        </Footer>
       </>
     </>
   );

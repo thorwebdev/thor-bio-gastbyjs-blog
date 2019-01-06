@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
-import { graphql } from "gatsby";
+import { kebabCase } from "lodash";
+import { Link, graphql } from "gatsby";
 import "./all.sass";
 
 // Components
@@ -40,6 +41,11 @@ export const BlogPostTemplate = ({
                 </ul>
               </div>
             ) : null}
+            <div style={{ marginTop: `4rem` }}>
+              <Link to="/blog">
+                <a>Back to list</a>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +102,8 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, YYYY")
         path
         title
+        description
+        # tags # TODO: add tag listing functionality
       }
     }
   }
