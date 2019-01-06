@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "tailwind.macro";
-import { graphql } from "gatsby";
+import { Link, graphql } from "gatsby";
 
 // Components
 import Layout from "../../components/Layout";
@@ -45,7 +45,9 @@ const Index = props => {
         <Bluesky />
         <Content>
           <Inner>
-            <Title>Blog</Title>
+            <Link to="/">
+              <Title>Blog</Title>
+            </Link>
             <ProjectsWrapper>
               {posts.map(({ node: post }) => (
                 <ProjectCard

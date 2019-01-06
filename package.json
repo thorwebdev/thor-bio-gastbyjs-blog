@@ -26,7 +26,10 @@
     "tailwind.macro": "^0.5.10",
     "tailwindcss": "^0.7.3",
     "typeface-cantata-one": "^0.0.54",
-    "typeface-open-sans": "^0.0.54"
+    "typeface-open-sans": "^0.0.54",
+    "bulma": "^0.7.0",
+    "gatsby-plugin-sass": "^2.0.7",
+    "node-sass": "^4.11.0"
   },
   "keywords": [
     "gatsby",
