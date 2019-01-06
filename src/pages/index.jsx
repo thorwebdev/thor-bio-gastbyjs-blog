@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import tw from "tailwind.macro";
 import { Parallax } from "react-spring/addons.cjs";
-import { graphql } from "gatsby";
+import { Link, graphql } from "gatsby";
 
 // Components
 import Layout from "../components/Layout";
@@ -76,7 +76,9 @@ const Index = props => {
           </Subtitle>
         </Hero>
         <Projects>
-          <Title>Blog</Title>
+          <Link to="/blog">
+            <Title>Blog</Title>
+          </Link>
           <ProjectsWrapper>
             {posts.map(({ node: post }) => (
               <ProjectCard
@@ -136,11 +138,13 @@ export default Index;
 
 export const pageQuery = graphql`
   query IndexQuery {
-    allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {
+    allMarkdownRemark(
+      sort: { order: DESC, fields: [frontmatter___date] }
+      limit: 4
+    ) {
       edges {
         node {
           id
-          excerpt(pruneLength: 400)
           timeToRead
           frontmatter {
             path
