@@ -42,9 +42,7 @@ export const BlogPostTemplate = ({
               </div>
             ) : null}
             <div style={{ marginTop: `4rem` }}>
-              <Link to="/blog">
-                <a>Back to list</a>
-              </Link>
+              <Link to="/blog">Back to list</Link>
             </div>
           </div>
         </div>

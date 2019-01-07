@@ -146,27 +146,7 @@ const Index = props => {
               </a>
             </ContactText>
           </Inner>
-          <Footer>
-            &copy; 2018 by Gatsby Starter Portfolio Cara | Made by{" "}
-            <a
-              href="https://www.lekoarts.de"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LekoArts
-            </a>
-            , extended to <Link to="/blog">blog</Link> by{" "}
-            <a href="http://thor.news">Thor</a> |{" "}
-            <a
-              href="https://github.com/tschaeff/thor-news-gastbyjs-blog"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="icon">
-                <img src={github} alt="Github" />
-              </span>
-            </a>
-          </Footer>
+          <Footer />
         </Contact>
       </Parallax>
     </>
