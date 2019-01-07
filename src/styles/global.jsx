@@ -21,8 +21,11 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
   a {
-    color: #e07628;
+    color: #3273dc;
     text-decoration: none;
+  }
+  a:hover {
+    color: #e07628;
   }
 `;
 
