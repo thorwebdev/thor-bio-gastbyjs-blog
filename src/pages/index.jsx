@@ -20,7 +20,6 @@ import About from "../views/About";
 import Contact from "../views/Contact";
 
 import avatar from "../images/thor.jpg";
-import github from "../images/github-icon.svg";
 
 const ProjectsWrapper = styled.div`
   ${tw`flex flex-wrap justify-between mt-8`};

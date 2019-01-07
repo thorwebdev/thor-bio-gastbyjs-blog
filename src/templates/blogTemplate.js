@@ -1,4 +1,6 @@
 import React from "react";
+import styled from "styled-components";
+import tw from "tailwind.macro";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { kebabCase } from "lodash";
@@ -6,6 +8,7 @@ import { Link, graphql } from "gatsby";
 import "./all.sass";
 
 // Components
+import Layout from "../components/Layout";
 import Content, { HTMLContent } from "../components/PostContent";
 
 export const BlogPostTemplate = ({
@@ -59,27 +62,37 @@ BlogPostTemplate.propTypes = {
   helmet: PropTypes.object
 };
 
+const ContentBackground = styled.div`
+  ${tw`fixed w-full h-full`};
+  background: #fff;
+  clip-path: polygon(0 1%, 100% 5%, 100% 99%, 0 95%);
+`;
+
 const BlogPost = ({ data }) => {
   const { markdownRemark: post } = data;
 
   return (
     <>
-      <BlogPostTemplate
-        content={post.html}
-        contentComponent={HTMLContent}
-        description={post.frontmatter.description}
-        helmet={
-          <Helmet titleTemplate="%s | Blog">
-            <title>{`${post.frontmatter.title}`}</title>
-            <meta
-              name="description"
-              content={`${post.frontmatter.description}`}
-            />
-          </Helmet>
-        }
-        tags={post.frontmatter.tags}
-        title={post.frontmatter.title}
-      />
+      <Layout />
+      <>
+        <ContentBackground />
+        <BlogPostTemplate
+          content={post.html}
+          contentComponent={HTMLContent}
+          description={post.frontmatter.description}
+          helmet={
+            <Helmet titleTemplate="%s | Blog">
+              <title>{`${post.frontmatter.title}`}</title>
+              <meta
+                name="description"
+                content={`${post.frontmatter.description}`}
+              />
+            </Helmet>
+          }
+          tags={post.frontmatter.tags}
+          title={post.frontmatter.title}
+        />
+      </>
     </>
   );
 };
