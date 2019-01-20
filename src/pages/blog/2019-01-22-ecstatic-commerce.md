@@ -13,7 +13,7 @@ tags:
 
 ## Why a static E-Commerce page?
 
-[Gatsby](https://www.gatsbyjs.org/) has become a very popular tool for building fast, modern web experiences. It's delightful to work with (ready [my previous post](/blog/2019-01-08-the-creation) for more details on that) which has caused its developer community and extension ecosystem to grow rapidly. I'm personally a big fan, and I think Gatsby has the potential to become as large as the WordPress community in the future.
+[Gatsby](https://www.gatsbyjs.org/) has become a very popular tool for building fast, modern web experiences. It's delightful to work with (read [my previous post](/blog/2019-01-08-the-creation) for more details on that) which has caused its developer community and extension ecosystem to grow rapidly. I'm personally a big fan, and I think Gatsby has the potential to become as large as the WordPress community in the future.
 
 WordPress has become an immensely popular platform for small to medium size e-commerce businesses, thanks to many niche plugins as well as the WooCommerce extension for WordPress which is a sizeable and profitable business both for the company behind WordPress and the developer community around it.
 
@@ -33,4 +33,4 @@ This setup makes sense if you're product catalogue doesn't change a lot, since e
 
 ## Live coding on Twitch
 
-If you don't like reading the full tutorial, you can tune in on Thursday, Jan 24 at 5pm GMT / 9am PT, and follow when [Jason Lengtsorf]() and I will be building a Gatsby e-commerce site live on [his Twitch channel](https://www.twitch.tv/jlengstorf). If you're reading this in the future, there is a recording available [here](https://www.youtube.com/playlist?list=PLz8Iz-Fnk_eTpvd49Sa77NiF8Uqq5Iykx).
+If you don't like reading the full tutorial, you can tune in on Thursday, Jan 24 at 5pm GMT / 9am PT, and follow when [Jason Lengtsorf](https://twitter.com/jlengstorf) and I will be building a Gatsby e-commerce site live on [his Twitch channel](https://www.twitch.tv/jlengstorf). If you're reading this in the future, there is a recording available [here](https://www.youtube.com/playlist?list=PLz8Iz-Fnk_eTpvd49Sa77NiF8Uqq5Iykx).
