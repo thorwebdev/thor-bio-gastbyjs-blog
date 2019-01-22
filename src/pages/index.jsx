@@ -81,6 +81,8 @@ const Index = props => {
                 key={post.id}
                 title={post.frontmatter.title}
                 link={post.frontmatter.path}
+                date={post.frontmatter.date}
+                ttr={post.timeToRead}
                 bg={post.frontmatter.background}
               >
                 {post.frontmatter.description}
