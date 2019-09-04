@@ -68,7 +68,7 @@ const Index = props => {
             Hello, <br /> I'm Thor.
           </BigTitle>
           <Subtitle>
-            I build delightful payment experiences with Europe's tech companies.
+            I empower developers to grow the GDP of the Internet.
           </Subtitle>
         </Hero>
         <Projects>
@@ -95,17 +95,18 @@ const Index = props => {
           <AboutHero>
             <Avatar src={avatar} alt="Thorsten Schaeff" />
             <AboutSub>
-              I'm a web dev enthusiast working with Stripe's customers on the
-              future of online payments. At Stripe we aim to expand Internet
-              Commerce by making it easy to process transactions and provide the
-              tools to manage an online business, ultimately increasing the GDP
-              of the Internet.
+              I'm a web dev enthusiast working with entrepreneurial developers
+              on the future of online payments. At Stripe we aim to expand
+              Internet Commerce by making it easy to process transactions and
+              provide the tools to manage an online business, ultimately
+              increasing the GDP of the Internet.
             </AboutSub>
           </AboutHero>
           <AboutDesc>
             We believe that enabling more transactions is a problem rooted in
             code and design, not finance. Stripe is built for developers,
-            makers, and creators. Interested in building Stripe in Europe? Go to{" "}
+            makers, and creators. Interested in building Stripe around the
+            globe? Go to{" "}
             <a
               href="https://medium.com/stripe-stories"
               target="_blank"
@@ -136,6 +137,14 @@ const Index = props => {
                 rel="noopener noreferrer"
               >
                 Twitter
+              </a>{" "}
+              |{" "}
+              <a
+                href="https://www.instagram.com/thorwebdev/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
               </a>{" "}
               |{" "}
               <a
