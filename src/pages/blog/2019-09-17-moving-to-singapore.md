@@ -1,7 +1,7 @@
 ---
-path: "/blog/2019-09-16-moving-to-singapore"
+path: "/blog/2019-09-17-moving-to-singapore"
 title: "Moving to Singapore"
-date: 2019-09-16
+date: 2019-09-17
 description: "After four years with Stripe in Europe, I'm excited to work with and learn from Southeast Asia's entrepreneurial developers."
 background: "linear-gradient(to right, rgb(237, 41, 57) 0%, rgb(255, 255, 255) 150%)"
 tags:
