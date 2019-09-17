@@ -6,7 +6,7 @@ const SEO = () => {
   const title = config.siteTitle;
   const description = config.siteDescription;
   const realPrefix = config.pathPrefix === "/" ? "" : config.pathPrefix;
-  const image = config.siteUrl + realPrefix + config.siteLogo + `?new`;
+  const image = config.siteUrl + realPrefix + config.siteLogo + `?singapore`;
   const blogURL = config.siteUrl + config.pathPrefix;
   const schemaOrgJSONLD = [
     {
