@@ -1,4 +1,4 @@
-# Thor News - A GatsbyJS Portfolio and Blog by Thorste Schaeff
+# Thor 雷神 News - A GatsbyJS Portfolio and Blog by Thorste Schaeff
 
 See it in action: [thor.news](http://thor.news)
 

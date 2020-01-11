@@ -41,7 +41,7 @@ However, it also reminded me that I wanted to look beyond Europe and its fun reg
 
 I first visited our Singapore office in early 2017 to help with a project at GrabTaxi, one of Southeast Asia's largest ride-hailing apps. While I struggled with the climate, I instantly fell in love with the energy of the city and the office, back then a small team of less than ten, which reminded me of the early Dublin days.
 
-Back then the lucky timing gods allowed me to join the team for an offsite in Indenisia, which was quite the experience (if you don't know the story, I'm happy to trade it for a coffee). From this trip on I was hooked, and I knew I wanted to spend some time learning more about this exciting region, however the timing was never quite right, until now.
+Back then the lucky timing gods allowed me to join the team for an offsite in Indonesia, which was quite the experience (if you don't know the story, I'm happy to trade it for a coffee). From this trip on I was hooked, and I knew I wanted to spend some time learning more about this exciting region, however the timing was never quite right, until now.
 
 I'm immensely grateful that Stripe supports and even encurages these types of rotations, not just in the sense of physical location, but also in terms of working on different teams, it is seen as an important knowledge sharing mechanism.
 
