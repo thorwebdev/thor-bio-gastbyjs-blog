@@ -65,7 +65,8 @@ const Index = props => {
       <Parallax pages={5}>
         <Hero>
           <BigTitle>
-            Hello, <br /> I'm Thor 雷神
+            Hello, <br /> I'm Thor{" "}
+            <span style={{ "white-space": "nowrap" }}>雷神</span>
           </BigTitle>
           <Subtitle>
             I empower developers to grow the GDP of the Internet.
