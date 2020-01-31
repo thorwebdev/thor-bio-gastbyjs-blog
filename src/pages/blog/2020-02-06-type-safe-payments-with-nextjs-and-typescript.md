@@ -57,7 +57,7 @@ module.exports = {
 
 **_NOTE_**: Do make sure to only use `process.env.STRIPE_SECRET_KEY` in files that live within the `/pages/api` folder (and subfolders), since Next.js will replace the `env` variables with their respective values during build time.
 
-### New loading utility for server-side rendered React applications.
+### New loading utility for ESnext applications.
 
 Due to [PCI compliance requirements](), the Stripe.js library has to be loaded from Stripe's servers. This creates a challenge when working with server-side rendered apps, as the window object is not available on the server. To help you manage that complexity Stripe provides a [loading wrapper](https://github.com/stripe/stripe-js) that allows you to import Stripe.js like an ES module:
 
@@ -69,17 +69,18 @@ const stripe = await loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
 
 Stripe.js is loaded as a side effect of the `import '@stripe/stripe-js';` statement. To best leverage Stripe’s advanced fraud functionality, ensure that Stripe.js is loaded on every page, not just your checkout page. This allows Stripe to detect anomalous behavior that may be indicative of fraud as customers browse your website.
 
-Since Next.js automatically performs [code-splitting](https://nextjs.org/#automatic-code-splitting), we need to make sure the import Stripe.js in the root app. To do so, wee need to add a `./pages/_app.js` file to customise the root app.
+Since Next.js automatically performs [code-splitting](https://nextjs.org/#automatic-code-splitting), we need to make sure the import Stripe.js in the root app. To do so, wee need to add a `./pages/_app.tsx` file to customise the root app.
 
 Finally, to use Element components and access the Stripe object in any nested component, we need to render an Elements provider at the root of our React app so that it is available everywhere we need it.
 
-```js
+```tsx
+import { AppProps } from "next/app";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY);
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Elements stripe={stripePromise}>
       <Component {...pageProps} />
@@ -96,7 +97,7 @@ The reason why we generally need a server-side component to process payments is 
 
 If you operate a pure static site (did someone say [JAMstack]()?), you can utilise Stripe's [client-only Checkout]() functionality. In this case you store your product details in Stripe, so Stripe itself can perform the server-side validation. You can see some examples of this using Gatsby on my [GitHub]().
 
-Back to the topic at hand, in this example, we want to allow customers to specify a custom amount they want to donate, however we want to set some limits which we specify in `./config/index.ts`:
+Back to the topic at hand: in this example, we want to allow customers to specify a custom amount they want to donate, however we want to set some limits which we specify in `./config/index.ts`:
 
 ```ts
 export const CURRENCY = "usd";
@@ -194,4 +195,10 @@ export function formatAmountForStripe(
 }
 ```
 
-### Handling Webhooks
+### The useStripe Hook
+
+### Creating a CheckoutSession and redirecting to Stripe Checkout
+
+### Taking card details on-site with Stripe Elements & PaymentIntents
+
+### Handling Webhooks & verifying their signature
