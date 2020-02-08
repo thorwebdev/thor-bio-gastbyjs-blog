@@ -28,6 +28,7 @@ tags:
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
 - [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements--paymentintents)
 - [Handling Webhooks & verifying their signature](#handling-webhooks--verifying-their-signature)
+- [Deploy it to the cloud with Zeit Now](#deploy-it-to-the-cloud-with-zeit-now)
 
 In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
 
@@ -344,4 +345,64 @@ export default ResultPage;
 
 ### Taking card details on-site with Stripe Elements & PaymentIntents
 
-### Handling Webhooks & verifying their signature
+### Handling Webhooks & checking their signatures
+
+Webhook events allow us to automatically get notified about events that happen on our Stripe account. This is especially useful when utilising [asynchronous payments](https://stripe.com/docs/payments/payment-intents/verifying-status#webhooks), subscriptions with [Stripe Billing](https://stripe.com/docs/billing/webhooks), or building a marketplace with [Stripe Connect](https://stripe.com/docs/connect/webhooks).
+
+By default Next.js API routes are same-origin only. To allow Stripe webhook event requests to reach our API route, we need to add `micro-cors`:
+
+```ts
+// Partial of ./pages/api/webhooks/index.ts
+import Cors from 'micro-cors';
+
+const cors = Cors({
+  allowMethods: ['POST', 'HEAD']
+});
+
+// ...
+
+export default cors(webhookHandler as any);
+```
+
+This, however, means that now anyone can post requests to our API route. To make sure that a webhook event was sent by Stripe, not by a third party, we need to [verify the webhook event signature](https://stripe.com/docs/webhooks/signatures#verify-official-libraries):
+
+```ts
+// Partial of ./pages/api/webhooks/index.ts
+// ...
+
+const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!
+
+// Stripe requires the raw body to construct the event.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    const buf = await buffer(req)
+    const sig = req.headers['stripe-signature']!
+
+    let event: Stripe.Event
+
+    try {
+      event = stripe.webhooks.constructEvent(buf.toString(), sig, webhookSecret)
+    } catch (err) {
+      // On error, log and return the error message
+      console.log(`❌ Error message: ${err.message}`)
+      res.status(400).send(`Webhook Error: ${err.message}`)
+      return
+    }
+
+    // Successfully constructed event
+    console.log('✅ Success:', event.id)
+
+// ...
+```
+
+This way our API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are actually processed.
+
+### Deploy it to the cloud with Zeit Now
+
+The example's [README file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript#deploy-it-to-the-cloud-with-zeit-now) has detailed instructions on how to deploy it.
