@@ -13,6 +13,22 @@ tags:
 
 ## Type-safe Payments with Next.js, TypeScript, and Stripe 🔒💸
 
+- Demo: https://nextjs-typescript-react-stripe-js.now.sh/
+- Code: https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript
+- CodeSandbox: https://codesandbox.io/s/nextjs-typescript-react-stripe-js-ix23n
+
+## Table of Contents
+
+- [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
+- [Managing API keys/secrets with Next.js](#managing-api-keyssecrets-with-nextjs)
+- [New Stripe.js loading utility for ESnext applications](#new-stripejs-loading-utility-for-esnext-applications)
+- [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-client-side)
+- [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zero-decimal-currencies)
+- [The useStripe Hook](#the-usestripe-hook)
+- [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
+- [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements--paymentintents)
+- [Handling Webhooks & verifying their signature](#handling-webhooks--verifying-their-signature)
+
 In the 2019 StackOverflow survey, TypeScript has gained a lot of popularity, moving into the top ten of the most popular programming languages.
 
 As of 8.0.1, Stripe maintains types for the latest [API version](https://stripe.com/docs/api/versioning), giving you type errors, autocompletion for API fields and params, in-editor documentation, and much more!
@@ -23,7 +39,7 @@ To support this great developer experience across the stack, we have also added 
 
 Setting up a TypeScript project with Next.js is quite convenient, as it automatically generates the `tsconfig.json` configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/zeit/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/stripe-samples/nextjs-typescript-react-stripe-js).
 
-### Managing API keys/secrets with Next.js
+### Managing API keys/secrets with Next.js & Zeit Now
 
 When working with API keys and secrets, we need to make sure we keep them secret and out of versioning control (make sure to add `.env` to your [`.gitignore` file](https://github.com/thorsten-stripe/nextjs-typescript-react-stripe-js/blob/master/.gitignore#L1)) while conveniently making them avaiable as `env` variables.
 
@@ -38,23 +54,38 @@ STRIPE_SECRET_KEY=sk_12345
 To make these variables available throughout our project, we will need to explicitly export them in the [`next.config.js` file](https://github.com/thorsten-stripe/nextjs-typescript-react-stripe-js/blob/master/next.config.js):
 
 ```js
-const dotEnvResult = require('dotenv').config();
+require('dotenv').config();
 
-const parsedVariables = dotEnvResult.parsed || {};
-const dotEnvVariables = {};
-// We always want to use the values from process.env, since dotenv
-// has already resolved these correctly in case of overrides
-for (const key of Object.keys(parsedVariables)) {
-  dotEnvVariables[key] = process.env[key];
-}
 module.exports = {
   env: {
-    ...dotEnvVariables
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET
   }
 };
 ```
 
 **_NOTE_**: Do make sure to only use `process.env.STRIPE_SECRET_KEY` in the API routes ([`/pages/api` folder](https://github.com/thorsten-stripe/nextjs-typescript-react-stripe-js/tree/master/pages/api) and subfolders), since Next.js will replace the `env` variables with their respective values during build time!
+
+When we deploy our site with [Now](https://zeit.co/now), we will nedd to [add the secrets to our Now account](https://zeit.co/docs/v2/serverless-functions/env-and-secrets) using the CLI:
+
+    now secrets add stripe_publishable_key pk_***
+    now secrets add stripe_secret_key sk_***
+    now secrets add stripe_webhook_secret whsec_***
+
+Lastly, we need to add a [`now.json`](https://github.com/thorsten-stripe/nextjs-typescript-react-stripe-js/blob/master/now.json) file to make these secrets available as env variables during build time:
+
+```json
+{
+  "build": {
+    "env": {
+      "STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key",
+      "STRIPE_SECRET_KEY": "@stripe_secret_key",
+      "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
+    }
+  }
+}
+```
 
 ### New Stripe.js loading utility for ESnext applications
 
