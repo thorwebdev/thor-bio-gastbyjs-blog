@@ -27,7 +27,7 @@ tags:
 - [The useStripe Hook](#the-usestripe-hook)
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
 - [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements--paymentintents)
-- [Handling Webhooks & verifying their signature](#handling-webhooks--verifying-their-signature)
+- [Handling Webhooks & checking their signatures](#handling-webhooks--checking-their-signatures)
 - [Deploy it to the cloud with Zeit Now](#deploy-it-to-the-cloud-with-zeit-now)
 
 In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
