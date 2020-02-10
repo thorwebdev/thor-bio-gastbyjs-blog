@@ -20,7 +20,7 @@ tags:
 ## Table of Contents
 
 - [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
-- [Managing API keys/secrets with Next.js](#managing-api-keyssecrets-with-nextjs)
+- [Managing API keys/secrets with Next.js & Zeit Now](#managing-api-keyssecrets-with-nextjs--zeit-now)
 - [Stripe.js loading utility for ESnext applications](#stripejs-loading-utility-for-esnext-applications)
 - [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-client-side)
 - [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zero-decimal-currencies)
