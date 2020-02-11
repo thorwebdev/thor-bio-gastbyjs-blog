@@ -20,7 +20,7 @@ tags:
 ## Table of Contents
 
 - [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
-- [Managing API keys/secrets with Next.js & Zeit Now](#managing-api-keyssecrets-with-nextjs--zeit-now)
+- [Managing API keys/secrets with Next.js & ZEIT Now](#managing-api-keyssecrets-with-nextjs--zeit-now)
 - [Stripe.js loading utility for ESnext applications](#stripejs-loading-utility-for-esnext-applications)
 - [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-client-side)
 - [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zero-decimal-currencies)
@@ -28,7 +28,7 @@ tags:
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
 - [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements--paymentintents)
 - [Handling Webhooks & checking their signatures](#handling-webhooks--checking-their-signatures)
-- [Deploy it to the cloud with Zeit Now](#deploy-it-to-the-cloud-with-zeit-now)
+- [Deploy it to the cloud with ZEIT Now](#deploy-it-to-the-cloud-with-zeit-now)
 
 In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
 
@@ -44,7 +44,7 @@ Alrighty, let's get into it ⚡️
 
 Setting up a TypeScript project with Next.js is quite convenient, as it automatically generates the [`tsconfig.json`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/tsconfig.json) configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/zeit/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript).
 
-### Managing API keys/secrets with Next.js & Zeit Now
+### Managing API keys/secrets with Next.js & ZEIT Now
 
 When working with API keys and secrets, we need to make sure we keep them secret and out of version control (make sure to add `.env` to your [`.gitignore` file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/.gitignore#L1)) while conveniently making them available as `env` variables.
 
@@ -470,6 +470,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 This way our API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are actually processed.
 
-### Deploy it to the cloud with Zeit Now
+### Deploy it to the cloud with ZEIT Now
 
 The example's [README file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript#deploy-it-to-the-cloud-with-zeit-now) has detailed instructions on how to deploy it.
