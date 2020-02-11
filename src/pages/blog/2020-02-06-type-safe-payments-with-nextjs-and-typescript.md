@@ -56,21 +56,19 @@ STRIPE_PUBLISHABLE_KEY=pk_12345
 STRIPE_SECRET_KEY=sk_12345
 ```
 
-To make these variables available throughout our project, we will need to explicitly export them in the [`next.config.js` file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/next.config.js):
+To allow next to insert our env vars as static values during build time we will need to explicitly export them in the [`next.config.js` file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/next.config.js):
 
 ```js
 require('dotenv').config();
 
 module.exports = {
   env: {
-    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY
   }
 };
 ```
 
-**_NOTE_**: Do make sure to only use secrets in the API routes ([`/pages/api` folder](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/pages/api) and subfolders), since Next.js will replace the `env` variables with their respective values during build time! The publishable key can be included in any of our client-side components.
+**_NOTE_**: Since Next.js will replace the `env` variables with their respective values during build time we only give it access to the publishable key. You could also hardcode the publishable key in the `next.config.js` file, however I prefer a centralised workflow.
 
 When we deploy our site with [Now](https://zeit.co/now), we will need to [add the secrets to our Now account](https://zeit.co/docs/v2/serverless-functions/env-and-secrets) using the CLI:
 
@@ -78,15 +76,17 @@ When we deploy our site with [Now](https://zeit.co/now), we will need to [add th
     now secrets add stripe_secret_key sk_***
     now secrets add stripe_webhook_secret whsec_***
 
-Lastly, we need to add a [`now.json`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/now.json) file to make these secrets available as env variables during build time:
+Lastly, we need to add a [`now.json`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/now.json) file to make these secrets available as env variables for our project:
 
 ```json
 {
+  "env": {
+    "STRIPE_SECRET_KEY": "@stripe_secret_key",
+    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
+  },
   "build": {
     "env": {
-      "STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key",
-      "STRIPE_SECRET_KEY": "@stripe_secret_key",
-      "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
+      "STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key"
     }
   }
 }
