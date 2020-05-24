@@ -7,6 +7,7 @@ import { Link, graphql } from "gatsby";
 // Components
 import Layout from "../components/Layout";
 import ProjectCard from "../components/ProjectCard";
+import ThorHammer from "../components/ThorHammer";
 
 // Elements
 import Inner from "../elements/Inner";
@@ -62,15 +63,14 @@ const Index = props => {
   return (
     <>
       <Layout />
+      <ThorHammer />
       <Parallax pages={5}>
         <Hero>
           <BigTitle>
-            Hello, <br /> I'm Thor{" "}
-            <span style={{ "white-space": "nowrap" }}>雷神</span>
+            Hello, <br /> I'm Thor
+            <span style={{ whiteSpace: "nowrap" }}> 雷神</span>
           </BigTitle>
-          <Subtitle>
-            I empower developers to grow the GDP of the Internet.
-          </Subtitle>
+          <Subtitle>I help developers grow the GDP of the Internet.</Subtitle>
         </Hero>
         <Projects>
           <Link to="/blog">
