@@ -6,7 +6,7 @@ module.exports = {
   siteTitle: "News from Thor 雷神", // Navigation and Site Title
   siteTitleAlt: "Thor News", // Alternative Site title for SEO
   siteTitleShort: "Thor News", // short_name for manifest
-  siteUrl: "http://thor.news", // Domain of your site. No trailing slash!
+  siteUrl: "https://thor.news", // Domain of your site. No trailing slash!
   siteLanguage: "en", // Language Tag on <html> element
   siteLogo: "/logo.png", // Used for SEO and manifest
   siteDescription: "Portfolio and Blog by Thorsten Schaeff",
@@ -18,5 +18,5 @@ module.exports = {
 
   // Manifest and Progress color
   themeColor: tailwind.colors.orange,
-  backgroundColor: tailwind.colors.blue
+  backgroundColor: tailwind.colors.blue,
 };

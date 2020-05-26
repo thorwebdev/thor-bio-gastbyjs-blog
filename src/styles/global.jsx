@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: #161719;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    cursor: url(http://thor.news/thorhammer_cursor.png), auto;
+    cursor: url(https://thor.news/thorhammer_cursor.png), auto;
   }
   html, body {
     width: 100%;

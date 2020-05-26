@@ -14,7 +14,7 @@ const Footer = () => (
       LekoArts
     </a>
     , extended to <Link to="/blog">blog</Link> by{" "}
-    <a href="http://twitter.com/thorwebdev">Thor (雷神)</a> | View sauce on{" "}
+    <a href="https://twitter.com/thorwebdev">Thor (雷神)</a> | View sauce on{" "}
     <a
       href="https://github.com/tschaeff/thor-news-gastbyjs-blog"
       target="_blank"
