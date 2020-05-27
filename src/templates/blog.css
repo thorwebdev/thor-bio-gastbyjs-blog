@@ -94,6 +94,8 @@ button {
   color: var(--nc-tx-2);
   font-size: 1.03rem;
   line-height: 1.5;
+
+  cursor: auto;
 }
 
 ::selection {

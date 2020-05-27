@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
   a:hover {
-    color: #e07628;
+    color: #a62ca3;
   }
 `;
 
