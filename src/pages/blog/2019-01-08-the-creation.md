@@ -33,7 +33,7 @@ Luckily there is a great tutorial on how to [add markdown pages](https://www.gat
 
 Now that we have our markdown files turned into static content pages we can use Gatsby's GraphQL interface to query them. The `pageQuery` below queries all of our "markdown pages", sorts them by the date that's included in the [yaml metadata](https://github.com/tschaeff/thor-news-gastbyjs-blog/blob/master/src/pages/blog/2019-01-08-the-creation.md), and limits it to four results. This way we can have the four most recent posts available on the index page. The resulting data is injected into our `IndexPage` component via a `data` parameter on our component's `props`, nice!
 
-```jsx:title=src/pages/index.jsx
+```jsx
 import React from "react";
 import { graphql } from "gatsby";
 

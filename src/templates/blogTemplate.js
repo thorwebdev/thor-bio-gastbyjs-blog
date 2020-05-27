@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { kebabCase } from "lodash";
 import { Link, graphql } from "gatsby";
-import "./all.sass";
+import "./blog.css";
 
 // Components
 import Layout from "../components/Layout";
@@ -32,7 +32,7 @@ export const BlogPostTemplate = ({
             </h1>
             <p>{description}</p>
             <div style={{ marginBottom: `1rem` }}>
-              <Link to="/blog">{`< Back to list`}</Link>
+              <Link to="/blog">{`⬅ Back to list`}</Link>
             </div>
             <PostContent content={content} />
             {tags && tags.length ? (
@@ -48,7 +48,7 @@ export const BlogPostTemplate = ({
               </div>
             ) : null}
             <div style={{ marginTop: `4rem` }}>
-              <Link to="/blog">{`< Back to list`}</Link>
+              <Link to="/blog">{`⬅ Back to list`}</Link>
             </div>
           </div>
         </div>
@@ -65,20 +65,13 @@ BlogPostTemplate.propTypes = {
   helmet: PropTypes.object,
 };
 
-const ContentBackground = styled.div`
-  ${tw`fixed w-full h-full`};
-  background: #fff;
-  clip-path: polygon(0 1%, 100% 2%, 100% 99%, 0 98%);
-`;
-
 const BlogPost = ({ data }) => {
   const { markdownRemark: post } = data;
 
   return (
-    <>
+    <div className="blog-body">
       <Layout />
       <>
-        <ContentBackground />
         <BlogPostTemplate
           content={post.html}
           contentComponent={HTMLContent}
@@ -96,7 +89,7 @@ const BlogPost = ({ data }) => {
           title={post.frontmatter.title}
         />
       </>
-    </>
+    </div>
   );
 };
 
