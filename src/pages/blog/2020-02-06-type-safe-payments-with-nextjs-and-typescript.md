@@ -15,19 +15,21 @@ tags:
 
 - Demo: https://nextjs-typescript-react-stripe-js.now.sh/
 - Code: https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript
-- CodeSandbox: https://codesandbox.io/s/nextjs-typescript-react-stripe-js-rqrss
+- CodeSandbox: https://codesandbox.io/s/github/stripe-samples/nextjs-typescript-react-stripe-js
+
+![Demo gif](https://nextjs-typescript-react-stripe-js.now.sh/checkout_demo.gif)
 
 ## Table of Contents
 
 - [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
-- [Managing API keys/secrets with Next.js & ZEIT Now](#managing-api-keyssecrets-with-nextjs--zeit-now)
+- [Managing API keys/secrets with Next.js & ZEIT Now](#managing-api-keyssecrets-with-nextjs-amp-zeit-now)
 - [Stripe.js loading utility for ESnext applications](#stripejs-loading-utility-for-esnext-applications)
-- [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-client-side)
-- [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zero-decimal-currencies)
+- [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-clientside)
+- [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zerodecimal-currencies)
 - [The useStripe Hook](#the-usestripe-hook)
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
-- [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements--paymentintents)
-- [Handling Webhooks & checking their signatures](#handling-webhooks--checking-their-signatures)
+- [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements-amp-paymentintents)
+- [Handling Webhooks & checking their signatures](#handling-webhooks-amp-checking-their-signatures)
 - [Deploy it to the cloud with ZEIT Now](#deploy-it-to-the-cloud-with-zeit-now)
 
 In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
@@ -38,7 +40,7 @@ To support this great developer experience across the stack, Stripe has also add
 
 Please do [tweet at me](https://twitter.com/thorwebdev) with your questions and feedback!
 
-Alrighty, let's get into it ⚡️
+Want to learn more about React Stripe.js? Join our Developer Office Hours on YouTube: {% youtube w1oLdAPyuok %} Alrighty, let's get into it ⚡️
 
 ### Setting up a TypeScript project with Next.js
 
@@ -63,8 +65,8 @@ require('dotenv').config();
 
 module.exports = {
   env: {
-    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY
-  }
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+  },
 };
 ```
 
@@ -203,7 +205,7 @@ export function formatAmountForDisplay(
   let numberFormat = new Intl.NumberFormat(['en-US'], {
     style: 'currency',
     currency: currency,
-    currencyDisplay: 'symbol'
+    currencyDisplay: 'symbol',
   });
   return numberFormat.format(amount);
 }
@@ -215,7 +217,7 @@ export function formatAmountForStripe(
   let numberFormat = new Intl.NumberFormat(['en-US'], {
     style: 'currency',
     currency: currency,
-    currencyDisplay: 'symbol'
+    currencyDisplay: 'symbol',
   });
   const parts = numberFormat.formatToParts(amount);
   let zeroDecimalCurrency: boolean = true;
@@ -252,11 +254,11 @@ const params: Stripe.Checkout.SessionCreateParams = {
       name: 'Custom amount donation',
       amount: formatAmountForStripe(amount, CURRENCY),
       currency: CURRENCY,
-      quantity: 1
-    }
+      quantity: 1,
+    },
   ],
   success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`
+  cancel_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
 };
 const checkoutSession: Stripe.Checkout.Session = await stripe.checkout.sessions.create(
   params
@@ -287,7 +289,7 @@ const handleSubmit = async (e: FormEvent) => {
     // Make the id field from the Checkout Session creation API response
     // available to this file, so you can provide it as parameter here
     // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-    sessionId: checkoutSession.id
+    sessionId: checkoutSession.id,
   });
   // If `redirectToCheckout` fails due to a browser or network
   // error, display the localized error message to your customer
@@ -375,7 +377,7 @@ if (!(amount >= MIN_AMOUNT && amount <= MAX_AMOUNT)) {
 const params: Stripe.PaymentIntentCreateParams = {
   payment_method_types: ['card'],
   amount: formatAmountForStripe(amount, CURRENCY),
-  currency: CURRENCY
+  currency: CURRENCY,
 };
 const payment_intent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
   params
@@ -427,7 +429,7 @@ By default Next.js API routes are same-origin only. To allow Stripe webhook even
 import Cors from 'micro-cors';
 
 const cors = Cors({
-  allowMethods: ['POST', 'HEAD']
+  allowMethods: ['POST', 'HEAD'],
 });
 // ...
 export default cors(webhookHandler as any);
