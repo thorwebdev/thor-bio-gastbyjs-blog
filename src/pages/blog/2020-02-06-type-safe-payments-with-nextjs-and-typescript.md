@@ -14,7 +14,7 @@ tags:
 ## Type-safe Payments with Next.js, TypeScript, and Stripe 🔒💸
 
 - Demo: https://nextjs-typescript-react-stripe-js.now.sh/
-- Code: https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript
+- Code: https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript
 - CodeSandbox: https://codesandbox.io/s/github/stripe-samples/nextjs-typescript-react-stripe-js
 
 ![Demo gif](https://nextjs-typescript-react-stripe-js.now.sh/checkout_demo.gif)
@@ -22,7 +22,7 @@ tags:
 ## Table of Contents
 
 - [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
-- [Managing API keys/secrets with Next.js & ZEIT Now](#managing-api-keyssecrets-with-nextjs-amp-zeit-now)
+- [Managing API keys/secrets with Next.js & Vercel](#managing-api-keyssecrets-with-nextjs-amp-vercel)
 - [Stripe.js loading utility for ESnext applications](#stripejs-loading-utility-for-esnext-applications)
 - [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-clientside)
 - [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zerodecimal-currencies)
@@ -30,7 +30,7 @@ tags:
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
 - [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements-amp-paymentintents)
 - [Handling Webhooks & checking their signatures](#handling-webhooks-amp-checking-their-signatures)
-- [Deploy it to the cloud with ZEIT Now](#deploy-it-to-the-cloud-with-zeit-now)
+- [Deploy it to the cloud with Vercel](#deploy-it-to-the-cloud-with-vercel)
 
 In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
 
@@ -44,55 +44,21 @@ Want to learn more about React Stripe.js? Join our Developer Office Hours on You
 
 ### Setting up a TypeScript project with Next.js
 
-Setting up a TypeScript project with Next.js is quite convenient, as it automatically generates the [`tsconfig.json`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/tsconfig.json) configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/zeit/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript).
+Setting up a TypeScript project with Next.js is quite convenient, as it automatically generates the [`tsconfig.json`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/tsconfig.json) configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/vercel/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript).
 
-### Managing API keys/secrets with Next.js & ZEIT Now
+### Managing API keys/secrets with Next.js & Vercel
 
-When working with API keys and secrets, we need to make sure we keep them secret and out of version control (make sure to add `.env` to your [`.gitignore` file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/.gitignore#L1)) while conveniently making them available as `env` variables.
+When working with API keys and secrets, we need to make sure we keep them secret and out of version control (make sure to add `.env*.local` to your [`.gitignore` file](https://github.com/vercel/next.js/blob/canary/examples/with-stripe-typescript/.gitignore#L13)) while conveniently making them available as `env` variables. Find more details about environment variables in the [Netx.js docs](https://nextjs.org/docs/basic-features/environment-variables).
 
-At the root of our project we add a `.env` file and provide the Stripe keys and secrets from our [Stripe Dashboard](https://stripe.com/docs/development#api-keys):
+At the root of our project we add a `.env.local` file and provide the Stripe keys and secrets from our [Stripe Dashboard](https://stripe.com/docs/development#api-keys):
 
 ```txt
 # Stripe keys
-STRIPE_PUBLISHABLE_KEY=pk_12345
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_12345
 STRIPE_SECRET_KEY=sk_12345
 ```
 
-To allow next to insert our env vars as static values during build time we will need to explicitly export them in the [`next.config.js` file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/next.config.js):
-
-```js
-require('dotenv').config();
-
-module.exports = {
-  env: {
-    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-  },
-};
-```
-
-**_NOTE_**: Since Next.js will replace the `env` variables with their respective values during build time we only give it access to the publishable key. You could also hardcode the publishable key in the `next.config.js` file, however I prefer a centralised workflow.
-
-When we deploy our site with [Now](https://zeit.co/now), we will need to [add the secrets to our Now account](https://zeit.co/docs/v2/serverless-functions/env-and-secrets) using the CLI:
-
-    now secrets add stripe_publishable_key pk_***
-    now secrets add stripe_secret_key sk_***
-    now secrets add stripe_webhook_secret whsec_***
-
-Lastly, we need to add a [`now.json`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/now.json) file to make these secrets available as env variables for our project:
-
-```json
-{
-  "env": {
-    "STRIPE_SECRET_KEY": "@stripe_secret_key",
-    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
-  },
-  "build": {
-    "env": {
-      "STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key"
-    }
-  }
-}
-```
+The `NEXT_PUBLIC_` prefix automatically exposes this variable to the browser. Next.js will insert the value for these into the publicly viewable source code at build/render time. Therefore make sure to not use this prefix for secret values!
 
 ### Stripe.js loading utility for ESnext applications
 
@@ -101,12 +67,12 @@ Due to [PCI compliance requirements](https://stripe.com/docs/security), the Stri
 ```js
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 ```
 
 Stripe.js is loaded as a side effect of the `import '@stripe/stripe-js';` statement. To best leverage Stripe’s advanced fraud functionality, ensure that Stripe.js is loaded on every page of your customer's checkout journey, not just your checkout page. This allows Stripe to detect anomalous behavior that may be indicative of fraud as customers browse your website.
 
-To make sure Stripe.js is loaded on all relevant pages, we create a [Layout component](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/components/Layout.tsx) that loads and initialises Stripe.js and wraps our pages in an Elements provider so that it is available everywhere we need it:
+To make sure Stripe.js is loaded on all relevant pages, we create a [Layout component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/Layout.tsx) that loads and initialises Stripe.js and wraps our pages in an Elements provider so that it is available everywhere we need it:
 
 ```tsx
 // Partial of components/Layout.tsx
@@ -118,7 +84,7 @@ type Props = {
   title?: string;
 };
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const Layout: React.FunctionComponent<Props> = ({
   children,
@@ -140,7 +106,7 @@ The reason why we generally need a server-side component to process payments is 
 
 If you operate a pure static site (did someone say [JAMstack](https://jamstack.org/)?!), you can utilise Stripe's [client-only Checkout](https://stripe.com/docs/payments/checkout/client-only) functionality. In this we create our product or subscription plan details in Stripe, so that Stripe can perform the server-side validation for us. You can see some examples of this using Gatsby on my [GitHub](https://github.com/thorsten-stripe/ecommerce-gatsby-tutorial).
 
-Back to the topic at hand: in this example, we want to allow customers to specify a custom amount that they want to donate, however we want to set some limits, which we specify in [`/config/index.ts`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/config/index.ts):
+Back to the topic at hand: in this example, we want to allow customers to specify a custom amount that they want to donate, however we want to set some limits, which we specify in [`/config/index.ts`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/config/index.ts):
 
 ```ts
 export const CURRENCY = 'usd';
@@ -151,7 +117,7 @@ export const MAX_AMOUNT = 5000.0;
 export const AMOUNT_STEP = 5.0;
 ```
 
-With Next.js we can conveniently use the same config file for both our client-side and our server-side (API route) components. On the client we create a custom amount input field component which is defined in [`/components/CustomDonationInput.tsx`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/components/CustomDonationInput.tsx) and can be used like this:
+With Next.js we can conveniently use the same config file for both our client-side and our server-side (API route) components. On the client we create a custom amount input field component which is defined in [`/components/CustomDonationInput.tsx`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/CustomDonationInput.tsx) and can be used like this:
 
 ```tsx
 // Partial of ./components/CheckoutForm.tsx
@@ -177,7 +143,7 @@ With Next.js we can conveniently use the same config file for both our client-si
 export default CheckoutForm;
 ```
 
-In our [server-side component](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L18-L22), we then validate the amount that was posted from the client:
+In our [server-side component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L18-L22), we then validate the amount that was posted from the client:
 
 ```ts
 // Partial of ./pages/api/checkout_sessions/index.ts
@@ -195,7 +161,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 ### Format currencies for display and detect zero-decimal currencies
 
-In JavaScript we can use the [`Intl.Numberformat` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) to correctly format amounts and currency symbols, as well as detect zero-Decimal currencies using the [`formatToParts` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat/formatToParts). For this we create some helper methods in [`./utils/stripe-helpers.ts`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/utils/stripe-helpers.ts):
+In JavaScript we can use the [`Intl.Numberformat` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) to correctly format amounts and currency symbols, as well as detect zero-Decimal currencies using the [`formatToParts` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat/formatToParts). For this we create some helper methods in [`./utils/stripe-helpers.ts`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/utils/stripe-helpers.ts):
 
 ```ts
 export function formatAmountForDisplay(
@@ -240,7 +206,7 @@ If you're unfamiliar with the concept of Hooks in React, I recommend briefly gla
 
 [Stripe Checkout](https://stripe.com/checkout) is the fastest way to get started with Stripe and provides a stripe-hosted checkout page that comes with various payment methods and support for Apple Pay and Google Pay out of the box.
 
-In our [`checkout_session` API route](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L23-L40) we create a CheckoutSession with the custom donation amount:
+In our [`checkout_session` API route](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L23-L40) we create a CheckoutSession with the custom donation amount:
 
 ```ts
 // Partial of ./pages/api/checkout_sessions/index.ts
@@ -266,7 +232,7 @@ const checkoutSession: Stripe.Checkout.Session = await stripe.checkout.sessions.
 // ...
 ```
 
-In our [client-side component](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/components/CheckoutForm.tsx#L23-L44), we then use the CheckoutSession id to redirect to the Stripe hosted page:
+In our [client-side component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/CheckoutForm.tsx#L23-L44), we then use the CheckoutSession id to redirect to the Stripe hosted page:
 
 ```tsx
 // Partial of ./components/CheckoutForm.tsx
@@ -299,7 +265,7 @@ const handleSubmit = async (e: FormEvent) => {
 // ...
 ```
 
-Once the customer has completed (or canceled) the payment on the Stripe side, they will be redirected to our [`/pages/result.tsx`](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript/pages/result.tsx) page. Here we use the `useRouter` hook to access the CheckoutSession id, that was appended to our URL, to retrieve and print the CheckoutSession object.
+Once the customer has completed (or canceled) the payment on the Stripe side, they will be redirected to our [`/pages/result.tsx`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/result.tsx) page. Here we use the `useRouter` hook to access the CheckoutSession id, that was appended to our URL, to retrieve and print the CheckoutSession object.
 
 Since we're using TypeScript, we can use some awesome ESnext language features like [optional chaining](https://github.com/tc39/proposal-optional-chaining#syntax) and the [nullish coalescing operator](https://github.com/tc39/proposal-nullish-coalescing#syntax) that are (at the time of writing) not yet available within JavaScript.
 
@@ -472,6 +438,10 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 This way our API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are actually processed.
 
-### Deploy it to the cloud with ZEIT Now
+### Deploy it to the cloud with Vercel
 
-The example's [README file](https://github.com/zeit/next.js/tree/canary/examples/with-stripe-typescript#deploy-it-to-the-cloud-with-zeit-now) has detailed instructions on how to deploy it.
+You can deploy this example by clicking the "Deploy to Vercel" button below. It will guide you through the secrets setup and create a fresh repository for you:
+
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript)
+
+From there you can clone the repository to your local machine, and anytime you commit/push/merge changes to master, Vercel will automatically redeploy the site for you 🥳
