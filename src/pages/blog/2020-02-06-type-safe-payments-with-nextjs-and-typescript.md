@@ -1,23 +1,10 @@
----
-path: '/blog/2020-02-06-type-safe-payments-with-nextjs-and-typescript'
-title: 'Type-safe Payments with Next.js & Typescript'
-date: 2020-02-06
-description: "Since version 8 stripe-node ships with types. Let's see how we can benefit from this when using Next.js with Typescript."
-background: 'linear-gradient(to right, rgb(0, 122, 204) 0%, rgb(255, 255, 255) 200%)'
-tags:
-  - Stripe
-  - TypeScript
-  - NextJS
-  - Types
----
-
 ## Type-safe Payments with Next.js, TypeScript, and Stripe 🔒💸
 
 - Demo: https://nextjs-typescript-react-stripe-js.now.sh/
 - Code: https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript
 - CodeSandbox: https://codesandbox.io/s/github/stripe-samples/nextjs-typescript-react-stripe-js
 
-![Demo gif](https://nextjs-typescript-react-stripe-js.now.sh/checkout_demo.gif)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/sPUSu19tZHg/0.jpg)](https://www.youtube.com/watch?v=sPUSu19tZHg)
 
 ## Table of Contents
 
@@ -31,16 +18,6 @@ tags:
 - [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements-amp-paymentintents)
 - [Handling Webhooks & checking their signatures](#handling-webhooks-amp-checking-their-signatures)
 - [Deploy it to the cloud with Vercel](#deploy-it-to-the-cloud-with-vercel)
-
-In the [2019 StackOverflow survey](https://insights.stackoverflow.com/survey/2019), TypeScript has gained a lot of popularity, moving into the top ten of the most popular and most loved languages.
-
-As of version 8.0.1, Stripe maintains types for the latest [API version](https://stripe.com/docs/api/versioning), giving you type errors, autocompletion for API fields and params, in-editor documentation, and much more!
-
-To support this great developer experience across the stack, Stripe has also added types to the [react-stripe-js](https://github.com/stripe/react-stripe-js) library, which additionally follows the hooks pattern, to enable a delightful and modern developer experience. Friendly Canadian Fullstack Dev [Wes Bos](https://twitter.com/wesbos) has [called it "awesome"](https://github.com/wesbos/advanced-react-rerecord/issues/14#issuecomment-577756088) and has already moved his [Advanced React course](https://advancedreact.com/) over to it, and I hope you will also enjoy this delightful experience soon 🙂
-
-Please do [tweet at me](https://twitter.com/thorwebdev) with your questions and feedback!
-
-Want to learn more about React Stripe.js? Join our Developer Office Hours on YouTube: {% youtube w1oLdAPyuok %} Alrighty, let's get into it ⚡️
 
 ### Setting up a TypeScript project with Next.js
 
