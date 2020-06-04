@@ -1,4 +1,4 @@
-## Getting started with Next.js, TypeScript, and Stripe
+## Getting started with Next.js, TypeScript, and Stripe Checkout
 
 - Demo: https://nextjs-typescript-react-stripe-js.now.sh/
 - Code: https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript
@@ -13,7 +13,7 @@
 - [Loading Stripe.js](#loading-stripejs)
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
 - [Handling Webhooks & checking their signatures](#handling-webhooks-amp-checking-their-signatures)
-- [Deploying to the cloud with Vercel](#deploy-it-to-the-cloud-with-vercel)
+- [Deploy with Vercel](#deploy-with-vercel)
 
 ### Setting up a TypeScript project with Next.js
 
@@ -164,7 +164,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 This way your API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are being processed.
 
-### Deploy it to the cloud with Vercel
+### Deploy with Vercel
 
 You can deploy this example by clicking the "Deploy to Vercel" button below. It will guide you through the secrets setup and create a fresh repository for you:
 
