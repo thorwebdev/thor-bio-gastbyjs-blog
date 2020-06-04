@@ -1,6 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-import tw from "tailwind.macro";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { kebabCase } from "lodash";
