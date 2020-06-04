@@ -1,33 +1,29 @@
-## Type-safe Payments with Next.js, TypeScript, and Stripe 🔒💸
+## Getting started with Next.js, TypeScript, and Stripe
 
 - Demo: https://nextjs-typescript-react-stripe-js.now.sh/
 - Code: https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript
 - CodeSandbox: https://codesandbox.io/s/github/stripe-samples/nextjs-typescript-react-stripe-js
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/sPUSu19tZHg/0.jpg)](https://www.youtube.com/watch?v=sPUSu19tZHg)
+[![Video Tutorial Preview](https://img.youtube.com/vi/sPUSu19tZHg/0.jpg)](https://www.youtube.com/watch?v=sPUSu19tZHg)
 
 ## Table of Contents
 
 - [Setting up a TypeScript project with Next.js](#setting-up-a-typescript-project-with-nextjs)
-- [Managing API keys/secrets with Next.js & Vercel](#managing-api-keyssecrets-with-nextjs-amp-vercel)
-- [Stripe.js loading utility for ESnext applications](#stripejs-loading-utility-for-esnext-applications)
-- [Handling custom amount input from the client-side](#handling-custom-amount-input-from-the-clientside)
-- [Format currencies for display and detect zero-decimal currencies](#format-currencies-for-display-and-detect-zerodecimal-currencies)
-- [The useStripe Hook](#the-usestripe-hook)
+- [Managing API keys/secrets with Next.js & Vercel](#managing-api-keyssecrets-with-nextjs-&-vercel)
+- [Loading Stripe.js](#loading-stripejs)
 - [Creating a CheckoutSession and redirecting to Stripe Checkout](#creating-a-checkoutsession-and-redirecting-to-stripe-checkout)
-- [Taking card details on-site with Stripe Elements & PaymentIntents](#taking-card-details-on-site-with-stripe-elements-amp-paymentintents)
 - [Handling Webhooks & checking their signatures](#handling-webhooks-amp-checking-their-signatures)
-- [Deploy it to the cloud with Vercel](#deploy-it-to-the-cloud-with-vercel)
+- [Deploying to the cloud with Vercel](#deploy-it-to-the-cloud-with-vercel)
 
 ### Setting up a TypeScript project with Next.js
 
-Setting up a TypeScript project with Next.js is quite convenient, as it automatically generates the [`tsconfig.json`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/tsconfig.json) configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/vercel/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript).
+Setting up a TypeScript project with Next.js is very convenient, as it automatically generates the [`tsconfig.json`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/tsconfig.json) configuration file for us. You can follow the setup steps in the [docs](https://nextjs.org/learn/excel/typescript/setup) or start off with a more complete [example](https://github.com/vercel/next.js/tree/canary/examples/with-typescript). Of course you can also find the full example that we're looking at in detail below, on [GitHub](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript).
 
 ### Managing API keys/secrets with Next.js & Vercel
 
-When working with API keys and secrets, we need to make sure we keep them secret and out of version control (make sure to add `.env*.local` to your [`.gitignore` file](https://github.com/vercel/next.js/blob/canary/examples/with-stripe-typescript/.gitignore#L13)) while conveniently making them available as `env` variables. Find more details about environment variables in the [Netx.js docs](https://nextjs.org/docs/basic-features/environment-variables).
+When working with API keys and secrets, you need to make sure to keep them out of version control. That's why you should set these as environment variables. Find more details on how to organise your `.env` files in the [Netx.js docs](https://nextjs.org/docs/basic-features/environment-variables).
 
-At the root of our project we add a `.env.local` file and provide the Stripe keys and secrets from our [Stripe Dashboard](https://stripe.com/docs/development#api-keys):
+At the root of your project add a `.env.local` file and provide the Stripe API keys from your [Stripe Dashboard](https://stripe.com/docs/development#api-keys). Make sure to add `.env*.local` to your [`.gitignore` file](https://github.com/vercel/next.js/blob/canary/examples/with-stripe-typescript/.gitignore#L13)) to tell git to not track your secrets.
 
 ```txt
 # Stripe keys
@@ -37,9 +33,9 @@ STRIPE_SECRET_KEY=sk_12345
 
 The `NEXT_PUBLIC_` prefix automatically exposes this variable to the browser. Next.js will insert the value for these into the publicly viewable source code at build/render time. Therefore make sure to not use this prefix for secret values!
 
-### Stripe.js loading utility for ESnext applications
+### Loading Stripe.js
 
-Due to [PCI compliance requirements](https://stripe.com/docs/security), the Stripe.js library has to be loaded from Stripe's servers. This creates a challenge when working with server-side rendered apps, as the window object is not available on the server. To help you manage that complexity, Stripe provides a [loading wrapper](https://github.com/stripe/stripe-js) that allows you to import Stripe.js like an ES module:
+Due to [PCI compliance requirements](https://stripe.com/docs/security), the Stripe.js library has to be loaded from Stripe's servers. This creates a challenge when working with server-side rendered apps, as the window object is not available on the server. To help you manage this, Stripe provides a [loading wrapper](https://github.com/stripe/stripe-js) that allows you to import Stripe.js as an ES module:
 
 ```js
 import { loadStripe } from '@stripe/stripe-js';
@@ -49,141 +45,13 @@ const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 Stripe.js is loaded as a side effect of the `import '@stripe/stripe-js';` statement. To best leverage Stripe’s advanced fraud functionality, ensure that Stripe.js is loaded on every page of your customer's checkout journey, not just your checkout page. This allows Stripe to detect anomalous behavior that may be indicative of fraud as customers browse your website.
 
-To make sure Stripe.js is loaded on all relevant pages, we create a [Layout component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/Layout.tsx) that loads and initialises Stripe.js and wraps our pages in an Elements provider so that it is available everywhere we need it:
-
-```tsx
-// Partial of components/Layout.tsx
-// ...
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-
-type Props = {
-  title?: string;
-};
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-const Layout: React.FunctionComponent<Props> = ({
-  children,
-  title = 'TypeScript Next.js Stripe Example'
-}) => (
-  <Elements stripe={stripePromise}>
-    <Head>
-    {/* ... */}
-    </footer>
-  </Elements>
-);
-
-export default Layout;
-```
-
-### Handling custom amount input from the client-side
-
-The reason why we generally need a server-side component to process payments is that we can't trust the input that is posted from the frontend. E.g. someone could open up the browser dev tools and modify the amount that the frontend sends to the backend. There always needs to be some server-side component to calculate/validate the amount that should be charged.
-
-If you operate a pure static site (did someone say [JAMstack](https://jamstack.org/)?!), you can utilise Stripe's [client-only Checkout](https://stripe.com/docs/payments/checkout/client-only) functionality. In this we create our product or subscription plan details in Stripe, so that Stripe can perform the server-side validation for us. You can see some examples of this using Gatsby on my [GitHub](https://github.com/thorsten-stripe/ecommerce-gatsby-tutorial).
-
-Back to the topic at hand: in this example, we want to allow customers to specify a custom amount that they want to donate, however we want to set some limits, which we specify in [`/config/index.ts`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/config/index.ts):
-
-```ts
-export const CURRENCY = 'usd';
-// Set your amount limits: Use float for decimal currencies and
-// Integer for zero-decimal currencies: https://stripe.com/docs/currencies#zero-decimal.
-export const MIN_AMOUNT = 10.0;
-export const MAX_AMOUNT = 5000.0;
-export const AMOUNT_STEP = 5.0;
-```
-
-With Next.js we can conveniently use the same config file for both our client-side and our server-side (API route) components. On the client we create a custom amount input field component which is defined in [`/components/CustomDonationInput.tsx`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/CustomDonationInput.tsx) and can be used like this:
-
-```tsx
-// Partial of ./components/CheckoutForm.tsx
-// ...
-  return (
-    <form onSubmit={handleSubmit}>
-      <CustomDonationInput
-        name={"customDonation"}
-        value={input.customDonation}
-        min={config.MIN_AMOUNT}
-        max={config.MAX_AMOUNT}
-        step={config.AMOUNT_STEP}
-        currency={config.CURRENCY}
-        onChange={handleInputChange}
-      />
-      <button type="submit">
-        Donate {formatAmountForDisplay(input.customDonation, config.CURRENCY)}
-      </button>
-    </form>
-  );
-};
-
-export default CheckoutForm;
-```
-
-In our [server-side component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L18-L22), we then validate the amount that was posted from the client:
-
-```ts
-// Partial of ./pages/api/checkout_sessions/index.ts
-// ...
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    const amount: number = req.body.amount;
-    try {
-      // Validate the amount that was passed from the client.
-      if (!(amount >= MIN_AMOUNT && amount <= MAX_AMOUNT)) {
-        throw new Error("Invalid amount.");
-      }
-// ...
-```
-
-### Format currencies for display and detect zero-decimal currencies
-
-In JavaScript we can use the [`Intl.Numberformat` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) to correctly format amounts and currency symbols, as well as detect zero-Decimal currencies using the [`formatToParts` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat/formatToParts). For this we create some helper methods in [`./utils/stripe-helpers.ts`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/utils/stripe-helpers.ts):
-
-```ts
-export function formatAmountForDisplay(
-  amount: number,
-  currency: string
-): string {
-  let numberFormat = new Intl.NumberFormat(['en-US'], {
-    style: 'currency',
-    currency: currency,
-    currencyDisplay: 'symbol',
-  });
-  return numberFormat.format(amount);
-}
-
-export function formatAmountForStripe(
-  amount: number,
-  currency: string
-): number {
-  let numberFormat = new Intl.NumberFormat(['en-US'], {
-    style: 'currency',
-    currency: currency,
-    currencyDisplay: 'symbol',
-  });
-  const parts = numberFormat.formatToParts(amount);
-  let zeroDecimalCurrency: boolean = true;
-  for (let part of parts) {
-    if (part.type === 'decimal') {
-      zeroDecimalCurrency = false;
-    }
-  }
-  return zeroDecimalCurrency ? amount : Math.round(amount * 100);
-}
-```
-
-### The useStripe Hook
-
-As part of the [react-stripe-js](https://github.com/stripe/react-stripe-js) library, Stripe provides hooks (e.g. [`useStripe`](https://stripe.com/docs/stripe-js/react#usestripe-hook), [`useElements`](https://stripe.com/docs/stripe-js/react#useelements-hook)) to retrieve references to the stripe and elements instances.
-
-If you're unfamiliar with the concept of Hooks in React, I recommend briefly glancing at ["Hooks at a Glance"](https://reactjs.org/docs/hooks-overview.html).
+If you prefer to delay loading of Stripe.js until Checkout, you can `import {loadStripe} from '@stripe/stripe-js/pure';`. Find more details on the various options in the [Stripe docs](https://stripe.com/docs/disputes/prevention/advanced-fraud-detection#disabling-advanced-fraud-detection).
 
 ### Creating a CheckoutSession and redirecting to Stripe Checkout
 
 [Stripe Checkout](https://stripe.com/checkout) is the fastest way to get started with Stripe and provides a stripe-hosted checkout page that comes with various payment methods and support for Apple Pay and Google Pay out of the box.
 
-In our [`checkout_session` API route](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L23-L40) we create a CheckoutSession with the custom donation amount:
+In your [`checkout_session` API route](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/api/checkout_sessions/index.ts#L23-L40) create a CheckoutSession with the custom donation amount:
 
 ```ts
 // Partial of ./pages/api/checkout_sessions/index.ts
@@ -209,7 +77,7 @@ const checkoutSession: Stripe.Checkout.Session = await stripe.checkout.sessions.
 // ...
 ```
 
-In our [client-side component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/CheckoutForm.tsx#L23-L44), we then use the CheckoutSession id to redirect to the Stripe hosted page:
+In your [client-side component](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/components/CheckoutForm.tsx#L23-L44), use the CheckoutSession id to redirect to the Stripe hosted page:
 
 ```tsx
 // Partial of ./components/CheckoutForm.tsx
@@ -242,9 +110,7 @@ const handleSubmit = async (e: FormEvent) => {
 // ...
 ```
 
-Once the customer has completed (or canceled) the payment on the Stripe side, they will be redirected to our [`/pages/result.tsx`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/result.tsx) page. Here we use the `useRouter` hook to access the CheckoutSession id, that was appended to our URL, to retrieve and print the CheckoutSession object.
-
-Since we're using TypeScript, we can use some awesome ESnext language features like [optional chaining](https://github.com/tc39/proposal-optional-chaining#syntax) and the [nullish coalescing operator](https://github.com/tc39/proposal-nullish-coalescing#syntax) that are (at the time of writing) not yet available within JavaScript.
+Once the customer has completed (or canceled) the payment on the Stripe side, they will be redirected to your [`/pages/result.tsx`](https://github.com/vercel/next.js/tree/canary/examples/with-stripe-typescript/pages/result.tsx) page. Use the `useRouter` hook to access the CheckoutSession id, that was appended to the URL, to retrieve and print the CheckoutSession object.
 
 ```tsx
 // Partial of ./pages/result.tsx
@@ -284,88 +150,11 @@ const ResultPage: NextPage = () => {
 export default ResultPage;
 ```
 
-### Taking card details on-site with Stripe Elements & PaymentIntents
-
-[Stripe Elements](https://stripe.com/payments/elements) are a set of prebuilt UI components that allow for maximum customisation and control of your checkout flows. You can find a collection of examples for inspiration on [GitHub](https://stripe.github.io/elements-examples).
-
-[React Stripe.js](https://stripe.com/docs/stripe-js/react) is a thin wrapper around Stripe Elements. It allows us to add Elements to our React application.
-
-[Above](#stripejs-loading-utility-for-esnext-applications) when setting up our Layout component, we've seen how to load Stripe and wrap our application in the Elements provider, allowing us to use the Stripe Elements components in any pages that use this Layout.
-
-In this example we're using the [default PaymentIntents integration](https://stripe.com/docs/payments/accept-a-payment#web), which will confirm our payment client-side. Therefore, once the user submits the form, we will first need to create a PaymentIntent in our API route:
-
-```tsx
-// Partial of ./components/ElementsForm.tsx
-// ...
-const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
-    e.preventDefault();
-    setPayment({ status: 'processing' });
-
-    // Create a PaymentIntent with the specified amount.
-    const response = await fetchPostJSON('/api/payment_intents', {
-      amount: input.customDonation
-    });
-    setPayment(response);
-// ...
-```
-
-```ts
-// Partial of ./pages/api/payment_intents/index.ts
-// ...
-// Validate the amount that was passed from the client.
-if (!(amount >= MIN_AMOUNT && amount <= MAX_AMOUNT)) {
-  throw new Error('Invalid amount.');
-}
-// Create PaymentIntent from body params.
-const params: Stripe.PaymentIntentCreateParams = {
-  payment_method_types: ['card'],
-  amount: formatAmountForStripe(amount, CURRENCY),
-  currency: CURRENCY,
-};
-const payment_intent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
-  params
-);
-// ...
-```
-
-The PaymentIntent will provide a [`client_secret`](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) which we can use to finalise the payment on the client using Stripe.js. This allows Stripe to automatically handle additional payment activation requirements like [authentication with 3D Secure](https://stripe.com/docs/payments/3d-secure), which is crucial for accepting payments in regions like Europe and India.
-
-```tsx
-// Partial of ./components/ElementsForm.tsx
-// ...
- // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const cardElement = elements!.getElement(CardElement);
-
-    // Use the card Element to confirm the Payment.
-    const { error, paymentIntent } = await stripe!.confirmCardPayment(
-      response.client_secret,
-      {
-        payment_method: {
-          card: cardElement!,
-          billing_details: { name: input.cardholderName }
-        }
-      }
-    );
-
-    if (error) {
-      setPayment({ status: 'error' });
-      setErrorMessage(error.message ?? 'An unknown error occured');
-    } else if (paymentIntent) {
-      setPayment(paymentIntent);
-    }
-  };
-// ...
-```
-
-**_NOTE_** that confirming the payment client-side means that we will need to [handle post-payment events](https://stripe.com/docs/payments/accept-a-payment#web-fulfillment). In this example we'll be [implementing a webhook handler](#handling-webhooks--verifying-their-signature) in the next step.
-
 ### Handling Webhooks & checking their signatures
 
-Webhook events allow us to automatically get notified about events that happen on our Stripe account. This is especially useful when utilising [asynchronous payments](https://stripe.com/docs/payments/payment-intents/verifying-status#webhooks), subscriptions with [Stripe Billing](https://stripe.com/docs/billing/webhooks), or building a marketplace with [Stripe Connect](https://stripe.com/docs/connect/webhooks).
+Webhook events allow you to get notified about events that happen on your Stripe account. This is especially useful for [asynchronous payments](https://stripe.com/docs/payments/payment-intents/verifying-status#webhooks), subscriptions with [Stripe Billing](https://stripe.com/docs/billing/webhooks), or building a marketplace with [Stripe Connect](https://stripe.com/docs/connect/webhooks).
 
-By default Next.js API routes are same-origin only. To allow Stripe webhook event requests to reach our API route, we need to add `micro-cors`:
+By default Next.js API routes are same-origin only. To allow Stripe webhook event requests to reach your API route, add `micro-cors`:
 
 ```ts
 // Partial of ./pages/api/webhooks/index.ts
@@ -378,7 +167,7 @@ const cors = Cors({
 export default cors(webhookHandler as any);
 ```
 
-This, however, means that now anyone can post requests to our API route. To make sure that a webhook event was sent by Stripe, not by a malicious third party, we need to [verify the webhook event signature](https://stripe.com/docs/webhooks/signatures#verify-official-libraries):
+This, however, means that now anyone can post requests to your API route. To make sure that a webhook event was sent by Stripe, not by a malicious third party, you need to [verify the webhook event signature](https://stripe.com/docs/webhooks/signatures#verify-official-libraries):
 
 ```ts
 // Partial of ./pages/api/webhooks/index.ts
@@ -413,7 +202,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 // ...
 ```
 
-This way our API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are actually processed.
+This way your API route is able to receive POST requests from Stripe but also makes sure, only requests sent by Stripe are being processed.
 
 ### Deploy it to the cloud with Vercel
 
