@@ -149,7 +149,7 @@ const Index = props => {
               </a>{" "}
               |{" "}
               <a
-                href="https://www.linkedin.com/in/tschaeff/"
+                href="https://www.linkedin.com/in/thorwebdev/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
