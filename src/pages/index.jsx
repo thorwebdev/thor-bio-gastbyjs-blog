@@ -70,7 +70,7 @@ const Index = props => {
             Hello, <br /> I'm Thor
             <span style={{ whiteSpace: "nowrap" }}> 雷神</span>
           </BigTitle>
-          <Subtitle>I help developers grow the GDP of the Internet.</Subtitle>
+          <Subtitle>I help developers create.</Subtitle>
         </Hero>
         <Projects>
           <Link to="/blog">
@@ -96,36 +96,9 @@ const Index = props => {
           <AboutHero>
             <Avatar src={avatar} alt="Thorsten Schaeff" />
             <AboutSub>
-              I'm a web dev enthusiast working with entrepreneurial developers
-              on the future of online payments. At Stripe we aim to expand
-              Internet Commerce by making it easy to process transactions and
-              provide the tools to manage an online business, ultimately
-              increasing the GDP of the Internet.
+              What I enjoy most about technology is enabling others to create. I love learning new things, and I learn best by teaching others. At Supabase we aim to make databases more accessible to all, with a delightful developer experience and a helpful and fun community. With Supabase you can build in a weekend, scale to millions!
             </AboutSub>
           </AboutHero>
-          <AboutDesc>
-            We believe that enabling more transactions is a problem rooted in
-            code and design, not finance. Stripe is built for developers,
-            makers, and creators. Interested in building Stripe around the
-            globe? Go to{" "}
-            <a
-              href="https://medium.com/stripe-stories"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              our Medium page
-            </a>{" "}
-            to find out more and don't hesitate to reach out if you're
-            interested in{" "}
-            <a
-              href="https://stripe.com/jobs"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              any open position
-            </a>
-            .
-          </AboutDesc>
         </About>
         <Contact>
           <Inner>
