@@ -8,7 +8,7 @@ const Hammer = styled.a`
   height: 242px;
   top: 1em;
   margin-left: 1em;
-  background-image: url("https://thorsticker.store/static/media/logo.6bfe1b4e.svg");
+  background-image: url("https://thorsticker-store.netlify.app/static/media/logo.6bfe1b4e.svg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -24,7 +24,7 @@ const Hammer = styled.a`
 const ThorHammer = () => {
   return (
     <Hammer
-      href="https://thorsticker.store"
+      href="https://thorsticker-store.netlify.app"
       target="_blank"
       rel="noopener noreferrer"
     />
